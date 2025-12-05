@@ -237,6 +237,7 @@ def list_regions():
         "Filters available:\n"
         "- table: C (cetaceans) or T (turtles)\n"
         "- period: YYYY-MM-DD/YYYY-MM-DD\n"
+        "- year: YYYY (auto expands to full year)\n"
         "- species: comma-separated list of species (scientific or common names)\n"
         "- region: comma-separated list of regions\n"
         "- bbox: xmin,ymin,xmax,ymax (WGS84)\n"
@@ -247,6 +248,9 @@ def get_records(
     table: str = Query(..., description="C = cetaceans, T = sea turtles"),
     period: Optional[str] = Query(
         None, description="Date range: YYYY-MM-DD/YYYY-MM-DD"
+    ),
+    year: Optional[int] = Query(
+        None, description="Full year: YYYY"
     ),
     species: Optional[str] = Query(
         None, description="Comma-separated species list"
@@ -281,6 +285,20 @@ def get_records(
             return {
                 "error": "Invalid period format. Use YYYY-MM-DD/YYYY-MM-DD."
             }
+        
+    # --------------------------------------------------------
+    # Year filter (only if period is not provided)
+    # --------------------------------------------------------
+    if year and not period:
+        try:
+            y = int(year)
+            d1 = f"{y}-01-01"
+            d2 = f"{y}-12-31"
+            filters.append("data_rilievo::date BETWEEN %s::date AND %s::date")
+            params.extend([d1, d2])
+        except Exception:
+            return {"error": "Invalid year parameter. Use YYYY."}
+
 
     # --------------------------------------------------------
     # Species filter
