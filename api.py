@@ -73,19 +73,47 @@ def normalize_table(value: str) -> str:
 # ------------------------------------------------------------
 
 def rows_to_geojson(rows):
-    """
-    Convert rows in the form (geom_json, props_json) into a GeoJSON FeatureCollection.
-    """
     features = []
-    for geom_json, props in rows:
-        features.append(
-            {
-                "type": "Feature",
-                "geometry": json.loads(geom_json),
-                "properties": props,
-            }
-        )
-    return {"type": "FeatureCollection", "features": features}
+
+    cetacean_props = [
+        "codice", "specie", "data_rilievo",
+        "comune", "provincia", "regione",
+        "latitudine", "longitudine",
+        "sesso", "lunghezza", "condizioni",
+        "targhetta", "targhetta_rilascio",
+        "segnalatore", "rilevatore", "struttura_rilevatore"
+    ]
+
+    turtle_props = [
+        "codice", "specie", "data_rilievo",
+        "comune", "provincia", "regione",
+        "latitudine", "longitudine",
+        "sesso", "lunghezza", "tipo_lunghezza", "condizioni",
+        "targhetta", "targhetta_rilascio",
+        "segnalatore", "rilevatore", "struttura_rilevatore"
+    ]
+
+    turtle_species = {"Caretta caretta", "Chelonia mydas", "Dermochelys coriacea"}
+
+    for r in rows:
+        props_list = turtle_props if r["specie"] in turtle_species else cetacean_props
+        properties = {p: r.get(p) for p in props_list}
+
+        features.append({
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [r["longitudine"], r["latitudine"]]
+            },
+            "properties": properties
+        })
+
+    return {
+        "type": "FeatureCollection",
+        "count": len(features),
+        "features": features
+    }
+
 
 
 # ------------------------------------------------------------
