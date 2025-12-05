@@ -273,18 +273,17 @@ def get_records(
     # Period filter
     # --------------------------------------------------------
     if period:
-        try:
-            d1, d2 = period.split("/")
-            date_from = datetime.strptime(d1, "%Y-%m-%d")
-            date_to = datetime.strptime(d2, "%Y-%m-%d")
-            filters.append("data_rilievo BETWEEN %s AND %s")
-            params.extend([date_from, date_to])
-        except Exception:
-            return {
-                "error": "Invalid period format. Use YYYY-MM-DD/YYYY-MM-DD."
-            }
+    try:
+        d1, d2 = period.split("/")
+        # NON usare datetime.strptime: tieni le stringhe così come sono
+        filters.append("data_rilievo::date BETWEEN %s::date AND %s::date")
+        params.extend([d1, d2])
+    except Exception:
+        return {
+            "error": "Invalid period format. Use YYYY-MM-DD/YYYY-MM-DD."
+        }
 
-        # --------------------------------------------------------
+    # --------------------------------------------------------
     # Species filter (accepts scientific + common names)
     # --------------------------------------------------------
     if species:
