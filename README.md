@@ -1,159 +1,63 @@
-# GeoCetus API v2
 
-La **GeoCetus API v2** è un'interfaccia REST progettata per fornire accesso standardizzato ai dati degli spiaggiamenti di cetacei e tartarughe marine lungo le coste italiane.  
-Include un sistema avanzato di filtraggio basato su parametri geografici, temporali e biologici.
+## 📝 Introduzione
 
-🔗 **Documentazione Swagger:** https://www.geocetus.it/gcapi/docs
+La **GeoCetus API v2** è un’interfaccia REST progettata per fornire accesso standardizzato ai dati degli **spiaggiamenti di cetacei e tartarughe marine** lungo le coste italiane.  
+Include un sistema avanzato di filtraggio basato su parametri **geografici, temporali e biologici**.
 
----
-
-## 🧰 Tecnologie principali
-
-- **Python 3.10+**
-- **FastAPI**
-- **Uvicorn**
-- **PostgreSQL + PostGIS** (opzionale)
-- **Pydantic**
-- **Requests / AioHTTP**
-- Struttura modulare progettata per estendibilità e scalabilità
+### 🔍 Novità Principale  
+Gestione intelligente del parametro **species**, che accetta sia **nomi scientifici** che **nomi comuni**, normalizzando automaticamente l’input al nome scientifico corretto.
 
 ---
 
-## 📦 Installazione
+## 🏛 Architettura Generale
 
-Clona la repository:
+Stack tecnologico adottato:
 
-```bash
-git clone https://github.com/<user>/GCApi.git
-cd GCApi
-```
+- **FastAPI** – framework REST moderno e performante  
+- **Uvicorn** – ASGI server ad alte prestazioni  
+- **Apache2** – reverse proxy pubblico  
+- **PostgreSQL / PostGIS** – database spaziale  
+- **Viste principali:** `v_cetacei`, `v_tartarughe`  
+- **Tabelle lookup:** `specie_cetacei`, `specie_tartarughe`, `regioni`
 
-Crea e attiva un ambiente virtuale:
-
-```bash
-python3 -m venv gc_api_env
-source gc_api_env/bin/activate
-```
-
-Installa i requisiti:
-
-```bash
-pip install -r requirements.txt
-```
+📌 **Base URL:**  
+https://www.geocetus.it/gcapi/v2/
 
 ---
 
-## ⚙️ Configurazione
+## 🔗 Endpoint Principali
 
-Il file `config.json` **non è incluso nella repository** perché contiene dati sensibili ed è incluso nel `.gitignore`.
-
-Crea il file a partire da un template:
-
-```bash
-cp config.example.json config.json
-```
-
-Esempio struttura:
-
-```json
-{
-  "db_host": "localhost",
-  "db_port": 5432,
-  "db_user": "utente",
-  "db_password": "password",
-  "db_name": "geocetus",
-  "api_key": "INSERISCI_CHIAVE"
-}
-```
+| Metodo | Endpoint | Descrizione | Esempio |
+|--------|----------|-------------|---------|
+| GET | `/v2/records` | Restituisce una FeatureCollection GeoJSON filtrabile | https://www.geocetus.it/gcapi/v2/records?table=T&limit=5 |
+| GET | `/v2/species` | Elenco delle specie disponibili | https://www.geocetus.it/gcapi/v2/species?table=C |
+| GET | `/v2/regions` | Elenco delle regioni italiane disponibili | https://www.geocetus.it/gcapi/v2/regions |
+| GET | `/gcapi/docs` | Swagger UI interattiva | https://www.geocetus.it/gcapi/docs |
+| GET | `/gcapi/openapi.json` | Schema OpenAPI completo | https://www.geocetus.it/gcapi/openapi.json |
 
 ---
 
-## 🚀 Avvio dell’API
+## 📌 Parametri Supportati (sintesi)
 
-Avvio in modalità sviluppo:
+I principali parametri accettati dagli endpoint di filtraggio includono:
 
-```bash
-uvicorn api:app --reload
-```
-
-L'API sarà disponibile su:
-
-```
-http://localhost:8000
-```
-
-Swagger UI:  
-```
-http://localhost:8000/docs
-```
-
-ReDoc:  
-```
-http://localhost:8000/redoc
-```
+- `species` — nome comune o scientifico (normalizzato automaticamente)  
+- `region` — filtra per regione  
+- `date_from` / `date_to` — filtri temporali  
+- `limit` — numero massimo di record  
+- `table` — specifica la tabella: `T` (tartarughe) oppure `C` (cetacei)
 
 ---
 
-## 🔍 Endpoints principali
+## 📦 Output
 
-| Metodo | Endpoint | Descrizione |
-|--------|----------|-------------|
-| GET | `/records` | Recupera record filtrati |
-| GET | `/stats` | Statistiche aggregate |
-| GET | `/health` | Verifica stato dell'API |
-| GET | `/species` | Elenco delle specie presenti nel dataset |
-| GET | `/regions` | Elenco delle regioni disponibili |
+Tutti i risultati dei record vengono restituiti in formato **GeoJSON**, compatibile con:
 
----
+- QGIS  
+- ArcGIS  
+- WebGIS (Leaflet, Mapbox, OpenLayers)  
+- Python (GeoPandas, Shapely)  
 
-## 🗂 Struttura del progetto
-
-```
-GCApi/
-│── api.py                # entrypoint FastAPI
-│── config.json           # configurazione sensibile (ignored)
-│── config.example.json   # template configurazione
-│── requirements.txt
-│── README.md
-│── gc_api_env/           # ambiente virtuale (ignored)
-│── routers/              # router modulari (opzionale)
-│── models/               # modelli Pydantic
-│── services/             # funzioni logiche e servizi
-│── utils/                # funzioni di utilità
-```
-
----
-
-## 🔐 Sicurezza
-
-- `config.json` è ignorato tramite `.gitignore`
-- Nessuna credenziale sensibile deve essere committata
-- Possibilità di usare variabili d'ambiente in produzione (`os.getenv()`)
-
----
-
-## 🧪 Testing
-
-Esegui i test con:
-
-```bash
-pytest
-```
-
----
-
-## 🤝 Contributi
-
-I contributi sono benvenuti!  
-Apri una *Issue* o invia una *Pull Request*.
-
----
-
-## 📄 Licenza
-
-Progetto rilasciato sotto licenza **MIT** (modificabile secondo necessità).
-
----
 
 ## 🐬 About
 
