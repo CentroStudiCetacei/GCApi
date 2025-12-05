@@ -75,6 +75,8 @@ def normalize_table(value: str) -> str:
 def rows_to_geojson(rows):
     features = []
 
+    turtle_species = {"Caretta caretta", "Chelonia mydas", "Dermochelys coriacea"}
+
     cetacean_props = [
         "codice", "specie", "data_rilievo",
         "comune", "provincia", "regione",
@@ -93,18 +95,21 @@ def rows_to_geojson(rows):
         "segnalatore", "rilevatore", "struttura_rilevatore"
     ]
 
-    turtle_species = {"Caretta caretta", "Chelonia mydas", "Dermochelys coriacea"}
+    for geometry_json, props in rows:
 
-    for r in rows:
-        props_list = turtle_props if r["specie"] in turtle_species else cetacean_props
-        properties = {p: r.get(p) for p in props_list}
+        # geometry_json è una stringa → convertirla in dict
+        geometry = json.loads(geometry_json)
+
+        # scegliere la lista di proprietà in base alla specie
+        species = props.get("specie", "")
+        props_list = turtle_props if species in turtle_species else cetacean_props
+
+        # estrarre solo le proprietà richieste e in ordine
+        properties = {k: props.get(k) for k in props_list}
 
         features.append({
             "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [r["longitudine"], r["latitudine"]]
-            },
+            "geometry": geometry,
             "properties": properties
         })
 
