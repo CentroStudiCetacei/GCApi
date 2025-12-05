@@ -273,19 +273,17 @@ def get_records(
     # Period filter
     # --------------------------------------------------------
     if period:
-    try:
-        d1, d2 = period.split("/")
-        # Usa direttamente le stringhe, lascia a Postgres il cast
-        filters.append("data_rilievo::date BETWEEN %s::date AND %s::date")
-        params.extend([d1, d2])
-    except Exception:
-        return {
-            "error": "Invalid period format. Use YYYY-MM-DD/YYYY-MM-DD."
-        }
-
+        try:
+            d1, d2 = period.split("/")
+            filters.append("data_rilievo::date BETWEEN %s::date AND %s::date")
+            params.extend([d1, d2])
+        except Exception:
+            return {
+                "error": "Invalid period format. Use YYYY-MM-DD/YYYY-MM-DD."
+            }
 
     # --------------------------------------------------------
-    # Species filter (accepts scientific + common names)
+    # Species filter
     # --------------------------------------------------------
     if species:
         # Raw values as provided in the URL
