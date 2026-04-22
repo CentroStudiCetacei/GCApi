@@ -81,7 +81,7 @@ def rows_to_geojson(rows):
         "codice", "specie", "data_rilievo",
         "comune", "provincia", "regione",
         "latitudine", "longitudine",
-        "sesso", "lunghezza", "condizioni",
+        "sesso", "lunghezza", "condizioni", "interazione",
         "targhetta", "targhetta_rilascio",
         "segnalatore", "rilevatore", "struttura_rilevatore"
     ]
@@ -90,7 +90,7 @@ def rows_to_geojson(rows):
         "codice", "specie", "data_rilievo",
         "comune", "provincia", "regione",
         "latitudine", "longitudine",
-        "sesso", "lunghezza", "tipo_lunghezza", "condizioni",
+        "sesso", "lunghezza", "tipo_lunghezza", "condizioni", "interazione",
         "targhetta", "targhetta_rilascio",
         "segnalatore", "rilevatore", "struttura_rilevatore"
     ]
