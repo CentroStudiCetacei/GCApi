@@ -4,6 +4,10 @@
 La **GeoCetus API v2** è un’interfaccia REST progettata per fornire accesso standardizzato ai dati degli **spiaggiamenti di cetacei e tartarughe marine** lungo le coste italiane.  
 Include un sistema avanzato di filtraggio basato su parametri **geografici, temporali e biologici**.
 
+**Ti chiediamo di citare questo lavoro in caso di utilizzo dei dati GeoCetus / Please cite this work when using GeoCetus data:**
+
+> Di Lorenzo, A.; Di Renzo, L.; Profico, C.; Profico, D.; Olivieri, V.; Guccione, S. *GeoCetus: A Multi-Decadal Open Geospatial Infrastructure for the Continuous Monitoring of Marine Strandings in Italy*. **Animals** 2026, 16, 1323. https://doi.org/10.3390/ani16091323
+
 ### 🔍 Novità Principale  
 Gestione intelligente del parametro **species**, che accetta sia **nomi scientifici** che **nomi comuni**, normalizzando automaticamente l’input al nome scientifico corretto.
 
